@@ -1,11 +1,20 @@
 import { makeObservable, observable, action, computed } from "mobx";
+import { BoidStore } from "./BoidStore";
+import { Vector3d } from "./Vector3d";
+
+interface IArgs{
+  id:string,
+  position: Vector3d,
+  boidStore: BoidStore,
+  isLeader: boolean
+}
 export class Boid {
   id = "";
-  position = [0, 0, 0];
-  isLeader = false;
-  boidStore;
+  position:Vector3d = [0, 0, 0];
+  isLeader :boolean= false;
+  boidStore: BoidStore;
 
-  constructor({ id, position = [0, 0, 0], boidStore, isLeader = false }) {
+  constructor({ id, position = [0, 0, 0], boidStore, isLeader = false }: IArgs) {
     makeObservable(this, {
       position: observable,
       isLeader: observable,
@@ -18,13 +27,13 @@ export class Boid {
     this.boidStore = boidStore;
   }
 
-  updatePosition(newPosition) {
+  updatePosition(newPosition:Vector3d) {
     this.position = newPosition;
   }
 
   get goalPosition() {
     return this.isLeader
       ? this.boidStore.mousePosition
-      : this.boidStore.leader.position;
+      : this.boidStore?.leader?.position;
   }
 }

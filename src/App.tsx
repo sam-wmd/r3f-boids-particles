@@ -9,7 +9,7 @@ const App = observer(() => {
     window.addEventListener("mousemove", updateMousePosition);
   }, []);
 
-  const updateMousePosition = (event) => {
+  const updateMousePosition = (event: MouseEvent) => {
     const x = (event.clientX / window.innerWidth) * 2 - 1;
     const y = -(event.clientY / window.innerHeight) * 2 + 1;
     const worldX = x * 8;
@@ -20,7 +20,7 @@ const App = observer(() => {
     <Canvas>
       <ambientLight intensity={0.8} />
       {store.boids.map(({ id }) => (
-        <BoidView boidId={id} />
+        <BoidView boidId={id} key={id} />
       ))}
     </Canvas>
   );
