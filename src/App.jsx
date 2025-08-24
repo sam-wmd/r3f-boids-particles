@@ -1,10 +1,10 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useState } from "react";
-import Boid from "./components/Boid";
+import BoidView from "./components/BoidView";
+import { observer } from "mobx-react-lite";
+import { store } from "./store";
 
-export default function App() {
-  const [mousePosition, setMousePosition] = useState([0, 0, 0]);
-  const [leaderPosition, setLeaderPosition] = useState([0, 0, 0]);
+const App = observer(() => {
   useEffect(() => {
     window.addEventListener("mousemove", updateMousePosition);
   }, []);
@@ -14,25 +14,16 @@ export default function App() {
     const y = -(event.clientY / window.innerHeight) * 2 + 1;
     const worldX = x * 8;
     const worldY = y * 4;
-
-    setMousePosition([worldX, worldY, 0]);
-  };
-  const handlePositionUpdate = (pos) => {
-    setLeaderPosition(pos);
+    store.mousePosition = [worldX, worldY, 0];
   };
   return (
     <Canvas>
       <ambientLight intensity={0.8} />
-      <Boid
-        leader
-        goalPosition={mousePosition}
-        onPositionUpdate={handlePositionUpdate}
-      />
-      <Boid goalPosition={leaderPosition} />
-      <Boid goalPosition={leaderPosition} />
-      <Boid goalPosition={leaderPosition} />
-      <Boid goalPosition={leaderPosition} />
-      <Boid goalPosition={leaderPosition} />
+      {store.boids.map(({ id }) => (
+        <BoidView boidId={id} />
+      ))}
     </Canvas>
   );
-}
+});
+
+export default App;
