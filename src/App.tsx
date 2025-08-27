@@ -16,8 +16,16 @@ const App = observer(() => {
     const worldY = y * 4;
     store.mousePosition = [worldX, worldY, 0];
   };
+
+  window.addEventListener("click", (event: MouseEvent) => {
+    store.addBoid({
+      id: Math.random().toString(),
+      isLeader: false,
+      position: [event.clientX % 2, event.clientY % 2],
+    });
+  });
   return (
-    <Canvas>
+    <Canvas color="#fada">
       <ambientLight intensity={0.8} />
       {store.boids.map(({ id }) => (
         <BoidView boidId={id} key={id} />

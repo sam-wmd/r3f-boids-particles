@@ -1,28 +1,27 @@
 import { action, computed, makeObservable, observable } from "mobx";
 import { Boid } from "./Boid";
-import { Vector3d } from "./Vector3d";
 type AddBoidParams ={
   id:string,
   isLeader?: boolean,
-  position?: Vector3d
+  position?: number[]
 }
 export class BoidStore {
-  mousePosition:Vector3d = [0, 0, 0];
+  mousePosition:number[] = [0, 0];
   boids :Array<Boid>= [];
 
   constructor() {
     makeObservable(this, {
       mousePosition: observable,
       boids: observable,
-      leader: computed,
+      leaders: computed,
       followers: computed,
       updateMousePosition: action,
       addBoid: action,
     });
   }
 
-  get leader() {
-    return this.boids.find((b) => b.isLeader);
+  get leaders() {
+    return this.boids.filter((b) => b.isLeader);
   }
 
   get followers() {
@@ -33,7 +32,7 @@ export class BoidStore {
     return this.boids.find((b) => b.id == id);
   }
 
-  updateMousePosition = (newPos: Vector3d) => {
+  updateMousePosition = (newPos:number[]) => {
     this.mousePosition = newPos;
   };
 

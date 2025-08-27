@@ -1,3 +1,4 @@
+import { Vector2d } from "model/Vector2d";
 import { Vector3d } from "model/Vector3d";
 import { Vector2 } from "three";
 
@@ -7,6 +8,7 @@ export const normalizeVector3d = (vector:Vector3d) => {
   return length > 0 ? [x / length, y / length, z / length] : [0, 0, 0];
 };
 export const vectorLength :([x,y,z]:Vector3d) => number = ([x,y,z]) => Math.sqrt(x ** 2 + y ** 2 + z ** 2);
+export const vectorLength2d :({x,y}:Vector2d) => number = ({x,y}) => Math.sqrt(x ** 2 + y ** 2);
 
 export const lerpToGoal : (currentPosition:Vector3d, goalPosition:Vector3d) => Vector3d = (currentPosition,goalPosition) =>{
   const lerpFactor = 0.1; // Adjust for smoothness (0.05 = slower, 0.2 = faster)
@@ -24,7 +26,7 @@ export const lerpToGoal : (currentPosition:Vector3d, goalPosition:Vector3d) => V
   ];
 };
 
-export const followGoal : (currentPosition:Vector3d, goalPosition:Vector3d, delta:number) => Vector3d = (currentPosition, goalPosition, delta) => {
+export const moveTowards : (currentPosition:Vector3d, goalPosition:Vector3d, delta:number) => Vector3d = (currentPosition, goalPosition, delta) => {
   const directionVectorToGoal= goalPosition.map(
     (v, i) => v * 0.9 - currentPosition[i] //0.9 so it never actually occupies the same position as the goal, it just stays very close
   ) as Vector3d;
@@ -42,3 +44,12 @@ export const followGoal : (currentPosition:Vector3d, goalPosition:Vector3d, delt
 
   return [prevX + speedX, prevY + speedY, prevZ + speedZ];
 };
+
+
+
+export const distance: (pointA:Vector3d, pointB:Vector3d) => number =(pointA, pointB) => {
+  let v = vectorLength(
+    pointB.map((p,idx)=> p - pointA[idx]) as Vector3d
+  )
+  return v
+}
