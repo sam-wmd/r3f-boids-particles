@@ -1,23 +1,35 @@
-import { action, computed, makeObservable, observable } from "mobx";
-import { Boid } from "./Boid";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
+import { Boid } from "../model/Boid";
+import ParameterStore from "./ParameterStore";
 type AddBoidParams ={
   id:string,
   isLeader?: boolean,
   position?: number[]
 }
+type IConstructorArgs = {
+  parameterStore: ParameterStore
+}
 export class BoidStore {
   mousePosition:number[] = [0, 0];
   boids :Array<Boid>= [];
+  parameterStore: ParameterStore;
 
-  constructor() {
+  constructor({parameterStore}:IConstructorArgs) {
     makeObservable(this, {
       mousePosition: observable,
       boids: observable,
       leaders: computed,
       followers: computed,
+      getBoids: computed,
       updateMousePosition: action,
       addBoid: action,
+      parameterStore: observable
     });
+    this.parameterStore = parameterStore
+  }
+
+  get getBoids(){
+    return this.boids;
   }
 
   get leaders() {
@@ -42,6 +54,7 @@ export class BoidStore {
       boidStore: this,
       isLeader: isLeader,
       position: position,
+      parameterStore: this.parameterStore
     });
     this.boids.push(boid);
   }

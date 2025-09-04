@@ -1,0 +1,5 @@
+.konvajs-content .grid-container {
+    display: grid;
+    grid-template-columns: 90% auto;
+    gap: 5px
+}
